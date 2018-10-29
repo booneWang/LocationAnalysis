@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DIGITAL DEMAND @ FA18</title>
+    <style>
+        html,
+        body,
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="container" class="container"></div>
+<script src="//webapi.amap.com/loca?v=1.2.0&key=6db69300890974d6b83b474efc6ea792"></script>
+<script src="//a.amap.com/Loca/static/dist/jquery.min.js"></script>
+<script>
+
+    var map = Loca.create('container', {
+        mapStyle: 'amap://styles/dark', //twilight, whitesmoke, dark, light, darkblue, blue,grey
+        viewMode: '3D',
+        zoom: 10,
+        pitch: 50,
+        center: [121.468181, 31.237577],
+        zooms: [10, 20]
+    });
+
+    $.get('CoordDemand.csv', function (heatmapData) {
+
+        var layer = Loca.visualLayer({
+            eventSupport: true, // 触发 selectStyle 需要开始事件拾取
+            container: map,
+            type: 'heatmap',
+            shape: 'hexagon'
+        });
+
+        layer.setData(heatmapData, {
+            lnglat: 'coordniater',
+            value: 'Demand',
+            type: 'csv'
+        });
+
+
+        layer.setOptions({
+            unit: 'meter',
+            mode: 'sum',
+            style: {
+                color: ['#fefffa', '#efedbe', '#f3e9a1', '#f7e081', '#f9c664', '#f6a754', '#ee6837', '#ee662d', '#ee4622', '#ee0e01'],
+                radius: 500,
+                opacity: 0.70,
+                height: [1, 3000000],
+                gap: 200
+            },
+            selectStyle: {
+                color: '#6fffab'
+            },
+        });
+
+        layer.render();
+    });
+
+</script>
+</body>
+</html>
